@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 """
 Logpuzzle exercise
 
@@ -29,7 +29,20 @@ def read_urls(filename):
     Screens out duplicate urls and returns the urls sorted into
     increasing order."""
     # +++your code here+++
-    pass
+    endswithJPG = re.compile(r"^(.*?.jpg$)")
+    with open(filename) as f:
+        FileLink = filename.split("_")[1]
+        JpgList = []
+        files = []
+        for line in f:
+            FindImages = line.split(" ")
+            FindJPGS = re.findall(endswithJPG, FindImages[6])
+            if len("".join(FindJPGS)) > 1:
+                JpgList.append("".join(FindJPGS))
+        sortedJpgList = sorted(list(dict.fromkeys(JpgList)))
+        for link in sortedJpgList:
+            files.append("http://" + FileLink + link)
+        return files
 
 
 def download_images(img_urls, dest_dir):
@@ -40,8 +53,15 @@ def download_images(img_urls, dest_dir):
     with an img tag to show each local image file.
     Creates the directory if necessary.
     """
-    # +++your code here+++
-    pass
+    print(img_urls)
+    try:
+        os.mkdir(dest_dir)
+        print("Directory: " + dest_dir + " Created ") 
+    except FileExistsError:
+        print("Directory: "  + dest_dir  + " already exists")
+    with open(dest_dir+"/index.html", 'w') as HTMLfile:
+        writeto = HTMLfile.write()
+
 
 
 def create_parser():
